@@ -158,6 +158,26 @@ describe('simpleLisp', function () {
       });
 
       it('should return concat of lists', function () {
+        expect(t.execute("(cons 1 ())")).toEqual([1]);
+      });
+
+      it('should return concat of lists', function () {
+        expect(t.execute("(cons 1 (1))")).toEqual([1, 1]);
+      });
+
+      it('should return concat of lists', function () {
+        expect(t.execute("(cons 1 (1 2 3))")).toEqual([1, 1, 2, 3]);
+      });
+
+      it('should return concat of lists', function () {
+        expect(t.execute("(cons (1 2 3) (1 2 3) (1 2 3))")).toEqual([1, 2, 3, 1, 2, 3, 1, 2, 3]);
+      });
+
+      it('should return concat of lists', function () {
+        expect(t.execute("(cons 5 (1 2 3) (1 2 3))")).toEqual([5, 1, 2, 3, 1, 2, 3]);
+      });
+
+      it('should return concat of lists', function () {
         expect(t.execute("(cons () ())")).toEqual([]);
       });
 

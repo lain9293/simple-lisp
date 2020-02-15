@@ -1,28 +1,34 @@
 const simpleLisp = {
   library: {
     car: (x) => {
-      return x[0] ? x[0] : [];
+      return x[0][0] ? x[0][0] : [];
     },
 
     cdr: (x) => {
-      return x.slice(1);
+      return x[0].slice(1);
     },
 
     cons: (x) => {
-      return [];
+      if (Array.isArray(x[0])) {
+        return x.reduce((acc, val) => [...acc, ...val]);
+      } else {
+        let tail = x.slice(1)
+        const newTail = tail.reduce((acc, val) => [...acc, ...val])
+        newTail.unshift(x[0]);
+        return newTail;
+      }
     },
 
     print: (x) => {
       // console.log(x);
-      return x;
+      return x[0];
     },
-
 
   },
 
   interpretList(input, context) {
     if (input.length > 0 && input[0].value in context) {
-      return context[input[0].value](input[1], context);
+      return context[input[0].value](input.slice(1), context);
     } else {
       let list = input.map((x) => {
         return this.interpret(x, context);
