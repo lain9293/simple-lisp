@@ -180,7 +180,42 @@ describe('simpleLisp', function () {
       it('should return concat of lists', function () {
         expect(t.execute("(cons () ())")).toEqual([]);
       });
+    });
 
+    describe('math', function () {
+      it('should return sum atom', function () {
+        expect(t.execute('(+ 2 2)')).toEqual(4);
+      });
+
+      it('should return difference atom', function () {
+        expect(t.execute('(- 4 2)')).toEqual(2);
+      });
+
+      it('should return difference atom', function () {
+        expect(t.execute('(- 1 2)')).toEqual(-1);
+      });
+
+      it('should return multi atom', function () {
+        expect(t.execute('(* 3 3)')).toEqual(9);
+      });
+
+      it('should return multi atom', function () {
+        expect(t.execute('(/ 9 3)')).toEqual(3);
+      });
+    });
+
+    describe('defun', function () {
+      it('should return empty array and init new function', function () {
+        expect(t.execute('(defun name(x y) (+ x y))')).toEqual([]);
+      });
+
+      it('should return res of new function', function () {
+        expect(t.execute('(defun name(x y) (+ x y))(name 2 3)')).toEqual(5);
+      });
+
+      it('should return res of new function', function () {
+        expect(t.execute('(defun name(x y) (cons (car x) (cdr y)))(name (1 2 3) (4 5 6))')).toEqual([1, 5, 6]);
+      });
     });
 
   });

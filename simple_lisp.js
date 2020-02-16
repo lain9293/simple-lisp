@@ -20,35 +20,91 @@ const simpleLisp = {
     },
 
     print: (x) => {
-      // console.log(x);
-      return x[0];
+      if (Array.isArray(x)) {
+        return x[0];
+      }
+      return x;
+    },
+
+    //Math
+    '+': (x) => {
+      if (x[0].type === 'number' && x[1].type === 'number') {
+        return {
+          type: 'number',
+          value: x[0].value + x[1].value
+        };
+      }
+      return null;
+    },
+
+    '-': (x) => {
+      if (x[0].type === 'number' && x[1].type === 'number') {
+        return {
+          type: 'number',
+          value: x[0].value - x[1].value
+        };
+      }
+      return null;
+    },
+
+    '*': (x) => {
+      if (x[0].type === 'number' && x[1].type === 'number') {
+        return {
+          type: 'number',
+          value: x[0].value * x[1].value
+        };
+      }
+      return null;
+    },
+
+    '/': (x) => {
+      if (x[0].type === 'number' && x[1].type === 'number') {
+        return {
+          type: 'number',
+          value: x[0].value / x[1].value
+        };
+      }
+      return null;
     },
 
   },
 
-  interpretList(input, context) {
-    if (input.length > 0 && input[0].value in context) {
-      return context[input[0].value](input.slice(1), context);
+  addToLibrary(name, params, func) {
+    return this.library[name.value] = (...inputs) => {
+      const _params = params;
+      let _func = func;
+      for (let i = 1; i < _func.length; i++) {
+        _func[i] = inputs[0][i - 1];
+      }
+      return this.interpret(_func);
+    }
+  },
+
+  interpretList(input) {
+    if (input.length > 0 && input[0].value === 'defun') {
+      this.addToLibrary(input[1], input[2], input[3]);
+      return undefined;
     } else {
-      let list = input.map((x) => {
-        return this.interpret(x, context);
+      const res = input.map(i => {
+        if (Array.isArray(i) && i.type === 'identifier') {
+          return this.interpret(i);
+        } else {
+          return i;
+        }
       });
-      if (list[0] instanceof Function) {
-        return list[0].apply(undefined, list.slice(1));
+      if (res.length > 0 && res[0].value in this.library) {
+        return this.library[res[0].value](res.slice(1));
       } else {
-        return list;
+        return res;
       }
     }
   },
 
-  interpret(input, context) {
-    context = context || {
-      ...this.library
-    };
+  interpret(input) {
     if (input instanceof Array) {
-      return this.interpretList(input, context);
+      return this.interpretList(input);
     } else if (input.type === "identifier") {
-      return context[input.value];
+      return this.library[input.value];
     } else if (input.type === "number" || input.type === "string") {
       return input.value;
     }
@@ -109,18 +165,53 @@ const simpleLisp = {
       });
   },
 
+  sentenceSplit(input) {
+    let count = 0;
+    let flag = false;
+    let res = [];
+    let start = 0;
+    for (let i = 0; i < input.length; i++) {
+      if (!count && flag) {
+        res.push(input.slice(start, i));
+        start = i;
+        flag = !flag;
+      }
+      if (input[i] === '(') count++;
+      if (input[i] === ')') count--;
+      if (!count) flag = !flag;
+    }
+    if (start < input.length) res.push(input.slice(start));
+    return res;
+  },
+
   parse(input) {
     return this.parenthesize(this.tokenize(input));
   },
 
   execute(input) {
-    const res = this.interpret(this.parse(input));
+    let res = [];
+    if (input.match(/[^"]?\(.*\)[^"]/gm)) {
+      this.sentenceSplit(input).forEach(sentence => {
+        const temp = this.interpret(this.parse(sentence))
+        if (temp !== undefined) {
+          res.push(temp);
+        }
+      })
+    } else {
+      res = this.interpret(this.parse(input))
+    }
+    if (res.length === 1) {
+      res = res[0];
+    }
     if (res instanceof Array) {
       return res.map(x => x.value ? x.value : x);
-    } else
+    } else {
       return res.value ? res.value : res;
+    }
   }
 };
+
+console.log(simpleLisp.execute('(cons (car (1 2 3)) (cdr (4 5 6)))'));
 
 module.exports = {
   simpleLisp
