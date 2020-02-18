@@ -178,6 +178,10 @@ describe('simpleLisp', function () {
       });
 
       it('should return concat of lists', function () {
+        expect(t.execute("(cons (car (1 2 3)) (cdr (4 5 6)))")).toEqual([1, 5, 6]);
+      });
+
+      it('should return concat of lists', function () {
         expect(t.execute("(cons () ())")).toEqual([]);
       });
     });

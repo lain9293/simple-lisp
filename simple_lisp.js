@@ -66,37 +66,57 @@ const simpleLisp = {
       }
       return null;
     },
+  },
 
+  replaceAll(func, params, inputs) {
+    return func.map(f => {
+      if (Array.isArray(f)) {
+        return this.replaceAll(f, params, inputs);
+      } else {
+        params.forEach((p, index) => {
+          if (f.type === 'identifier' && f.value === p.value) {
+            f = inputs[0][index];
+          }
+        })
+        return f;
+      }
+    })
   },
 
   addToLibrary(name, params, func) {
     return this.library[name.value] = (...inputs) => {
       const _params = params;
       let _func = func;
-      for (let i = 1; i < _func.length; i++) {
-        _func[i] = inputs[0][i - 1];
-      }
+      _func = this.replaceAll(_func, params, inputs);
       return this.interpret(_func);
     }
   },
 
-  interpretList(input) {
-    if (input.length > 0 && input[0].value === 'defun') {
-      this.addToLibrary(input[1], input[2], input[3]);
-      return undefined;
-    } else {
-      const res = input.map(i => {
-        if (Array.isArray(i) && i.type === 'identifier') {
-          return this.interpret(i);
+  resolve(inputs) {
+    if (inputs.length > 0 && inputs[0].type === 'identifier') {
+      const res = inputs.slice(1).map(t => {
+        if (Array.isArray(t) && t.length > 0 && t[0].type === 'identifier') {
+          return this.resolve(t)
         } else {
-          return i;
+          return t;
         }
-      });
-      if (res.length > 0 && res[0].value in this.library) {
-        return this.library[res[0].value](res.slice(1));
+      })
+      if (inputs.length > 0 && inputs[0].value in this.library) {
+        return this.library[inputs[0].value](res);
       } else {
         return res;
       }
+    } else {
+      return inputs;
+    }
+  },
+
+  interpretList(input) {
+    if (input.length === 4 && input[0].value === 'defun') {
+      this.addToLibrary(input[1], input[2], input[3]);
+      return undefined;
+    } else {
+      return this.resolve(input);
     }
   },
 
@@ -211,7 +231,8 @@ const simpleLisp = {
   }
 };
 
-console.log(simpleLisp.execute('(cons (car (1 2 3)) (cdr (4 5 6)))'));
+console.log(simpleLisp.execute('(defun name(x y) (cons (car x) (cdr y)))(name (1 2 3) (4 5 6))'))
+console.log(simpleLisp.execute('(cons (car (1 2 3)) (cdr (4 5 6)))'))
 
 module.exports = {
   simpleLisp
