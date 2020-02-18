@@ -231,9 +231,6 @@ const simpleLisp = {
   }
 };
 
-console.log(simpleLisp.execute('(defun name(x y) (cons (car x) (cdr y)))(name (1 2 3) (4 5 6))'))
-console.log(simpleLisp.execute('(cons (car (1 2 3)) (cdr (4 5 6)))'))
-
 module.exports = {
   simpleLisp
 };
