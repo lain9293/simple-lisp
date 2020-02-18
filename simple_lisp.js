@@ -1,71 +1,141 @@
 const simpleLisp = {
-  library: {
-    car: (x) => {
-      return x[0][0] ? x[0][0] : [];
-    },
+  car(x) {
+    return x[0][0] ? x[0][0] : [];
+  },
 
-    cdr: (x) => {
-      return x[0].slice(1);
-    },
+  cdr(x) {
+    return x[0].slice(1);
+  },
 
-    cons: (x) => {
-      if (Array.isArray(x[0])) {
-        return x.reduce((acc, val) => [...acc, ...val]);
-      } else {
-        let tail = x.slice(1)
-        const newTail = tail.reduce((acc, val) => [...acc, ...val])
-        newTail.unshift(x[0]);
-        return newTail;
+  cons(x) {
+    if (Array.isArray(x[0])) {
+      return x.reduce((acc, val) => [...acc, ...val]);
+    } else {
+      let tail = x.slice(1)
+      const newTail = tail.reduce((acc, val) => [...acc, ...val])
+      newTail.unshift(x[0]);
+      return newTail;
+    }
+  },
+
+  cond(x) {
+    let res = [];
+    for (let i = 0; i < x.length; i++) {
+      let temp = this.interpret(x[i][0]);
+      if (temp.hasOwnProperty('value') ? temp.value : temp) {
+        res = this.interpret(x[i][1]);
+        break;
       }
-    },
+    }
+    return res;
+  },
 
-    print: (x) => {
-      if (Array.isArray(x)) {
-        return x[0];
-      }
-      return x;
-    },
+  print(x) {
+    if (Array.isArray(x)) {
+      return x[0];
+    }
+    return x;
+  },
 
-    //Math
-    '+': (x) => {
-      if (x[0].type === 'number' && x[1].type === 'number') {
-        return {
-          type: 'number',
-          value: x[0].value + x[1].value
-        };
-      }
-      return null;
-    },
+  //Math
+  '+'(x) {
+    console.log(x)
+    return {
+      type: 'number',
+      value: x[0].value + x[1].value
+    };
+  },
 
-    '-': (x) => {
-      if (x[0].type === 'number' && x[1].type === 'number') {
-        return {
-          type: 'number',
-          value: x[0].value - x[1].value
-        };
-      }
-      return null;
-    },
+  '-'(x) {
+    return {
+      type: 'number',
+      value: x[0].value - x[1].value
+    };
+  },
 
-    '*': (x) => {
-      if (x[0].type === 'number' && x[1].type === 'number') {
-        return {
-          type: 'number',
-          value: x[0].value * x[1].value
-        };
-      }
-      return null;
-    },
+  '*'(x) {
+    return {
+      type: 'number',
+      value: x[0].value * x[1].value
+    };
+  },
 
-    '/': (x) => {
-      if (x[0].type === 'number' && x[1].type === 'number') {
-        return {
-          type: 'number',
-          value: x[0].value / x[1].value
-        };
-      }
-      return null;
-    },
+  '/'(x) {
+    return {
+      type: 'number',
+      value: x[0].value / x[1].value
+    };
+  },
+
+  '='(x) {
+    return {
+      type: 'boolean',
+      value: x[0].value === x[1].value
+    };
+  },
+
+  '!='(x) {
+    return {
+      type: 'boolean',
+      value: x[0].value !== x[1].value
+    };
+  },
+
+  '<'(x) {
+    return {
+      type: 'boolean',
+      value: x[0].value < x[1].value
+    };
+  },
+
+  '>'(x) {
+    return {
+      type: 'boolean',
+      value: x[0].value > x[1].value
+    };
+  },
+
+  '<='(x) {
+    return {
+      type: 'boolean',
+      value: x[0].value <= x[1].value
+    };
+  },
+
+  '>='(x) {
+    return {
+      type: 'boolean',
+      value: x[0].value >= x[1].value
+    };
+  },
+
+  'and'(x) {
+    return {
+      type: 'boolean',
+      value: x[0].value && x[1].value
+    };
+  },
+
+  'or'(x) {
+    return {
+      type: 'boolean',
+      value: x[0].value || x[1].value
+    };
+  },
+
+  'not'(x) {
+    return {
+      type: 'boolean',
+      value: !x[0].value
+    };
+  },
+
+  'nil'(x) {
+    if (Array.isArray(x[0])) {
+      return x[0].length <= 0;
+    } else {
+      return !x[0];
+    }
   },
 
   replaceAll(func, params, inputs) {
@@ -84,7 +154,7 @@ const simpleLisp = {
   },
 
   addToLibrary(name, params, func) {
-    return this.library[name.value] = (...inputs) => {
+    return this[name.value] = (...inputs) => {
       const _params = params;
       let _func = func;
       _func = this.replaceAll(_func, params, inputs);
@@ -101,8 +171,8 @@ const simpleLisp = {
           return t;
         }
       })
-      if (inputs.length > 0 && inputs[0].value in this.library) {
-        return this.library[inputs[0].value](res);
+      if (inputs.length > 0 && inputs[0].value in this) {
+        return this[inputs[0].value](res);
       } else {
         return res;
       }
@@ -124,14 +194,19 @@ const simpleLisp = {
     if (input instanceof Array) {
       return this.interpretList(input);
     } else if (input.type === "identifier") {
-      return this.library[input.value];
-    } else if (input.type === "number" || input.type === "string") {
+      return this[input.value];
+    } else if (input.type === "number" || input.type === "string" || input.type === "boolean") {
       return input.value;
     }
   },
 
   categorize(input) {
-    if (!isNaN(parseFloat(input))) {
+    if (input === "true" || input === "false") {
+      return {
+        type: 'boolean',
+        value: (input == 'true')
+      };
+    } else if (!isNaN(parseFloat(input))) {
       return {
         type: 'number',
         value: parseFloat(input)
@@ -226,10 +301,12 @@ const simpleLisp = {
     if (res instanceof Array) {
       return res.map(x => x.value ? x.value : x);
     } else {
-      return res.value ? res.value : res;
+      return res.hasOwnProperty('value') ? res.value : res;
     }
   }
 };
+
+console.log(JSON.stringify(simpleLisp.parse('(defun sum(lst)(cond ((nil lst) 0)(true (+ (car lst)(sum (cdr lst))))))')))
 
 module.exports = {
   simpleLisp

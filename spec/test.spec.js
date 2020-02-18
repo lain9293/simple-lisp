@@ -182,7 +182,23 @@ describe('simpleLisp', function () {
       });
 
       it('should return concat of lists', function () {
-        expect(t.execute("(cons () ())")).toEqual([]);
+        expect(t.execute('(cond ((< 2 3) "test"))')).toEqual("test");
+      });
+
+      it('should return concat of lists', function () {
+        expect(t.execute('(cond ((> 2 3) "test"))')).toEqual([]);
+      });
+
+      it('should return concat of lists', function () {
+        expect(t.execute('(cond ((> 2 3) "test")((< 3 5) "test1"))')).toEqual("test1");
+      });
+
+      it('should return concat of lists', function () {
+        expect(t.execute('(cond (true "test")((< 3 5) "test1"))')).toEqual("test");
+      });
+
+      it('should return concat of lists', function () {
+        expect(t.execute('(cons () ())')).toEqual([]);
       });
     });
 
@@ -206,6 +222,59 @@ describe('simpleLisp', function () {
       it('should return multi atom', function () {
         expect(t.execute('(/ 9 3)')).toEqual(3);
       });
+
+      it('should return true', function () {
+        expect(t.execute('(= 2 2)')).toEqual(true);
+      });
+
+      it('should return true', function () {
+        expect(t.execute('(< 2 3)')).toEqual(true);
+      });
+
+      it('should return false', function () {
+        expect(t.execute('(> 2 3)')).toEqual(false);
+      });
+
+      it('should return true', function () {
+        expect(t.execute('(>= 3 3)')).toEqual(true);
+      });
+
+      it('should return true', function () {
+        expect(t.execute('(<= 5 5)')).toEqual(true);
+      });
+
+      it('should return true', function () {
+        expect(t.execute('(!= 15 5)')).toEqual(true);
+      });
+
+      it('should return false', function () {
+        expect(t.execute('(and true false)')).toEqual(false);
+      });
+
+      it('should return false', function () {
+        expect(t.execute('(or true false)')).toEqual(true);
+      });
+
+      it('should return false', function () {
+        expect(t.execute('(not true)')).toEqual(false);
+      });
+
+      it('should return false', function () {
+        expect(t.execute('(not false)')).toEqual(true);
+      });
+
+      it('should return true', function () {
+        expect(t.execute('(nil ())')).toEqual(true);
+      });
+
+      it('should return false', function () {
+        expect(t.execute('(nil (1 2 3))')).toEqual(false);
+      });
+
+      it('should return false', function () {
+        expect(t.execute('(nil 3)')).toEqual(false);
+      });
+
     });
 
     describe('defun', function () {
@@ -220,6 +289,21 @@ describe('simpleLisp', function () {
       it('should return res of new function', function () {
         expect(t.execute('(defun name(x y) (cons (car x) (cdr y)))(name (1 2 3) (4 5 6))')).toEqual([1, 5, 6]);
       });
+    });
+
+    describe('e2e', function () {
+      it('should return sum equal zero', function () {
+        expect(t.execute('(defun sum(lst)(cond ((nil lst)0)(true (+(car lst)(sum(cdr lst))))))(sum ())')).toEqual(0);
+      });
+
+      it('should return sum equal one', function () {
+        expect(t.execute('(defun sum(lst)(cond ((nil lst)0)(true (+(car lst)(sum(cdr lst))))))(sum (1))')).toEqual(1);
+      });
+
+      it('should return sum equal six', function () {
+        expect(t.execute('(defun sum(lst)(cond ((nil lst)0)(true (+(car lst)(sum(cdr lst))))))(sum (1 2 3))')).toEqual(6);
+      });
+
     });
 
   });
