@@ -39,94 +39,93 @@ const simpleLisp = {
 
   //Math
   '+'(x) {
-    console.log(x)
     return {
       type: 'number',
-      value: x[0].value + x[1].value
+      value: this.interpret(x[0]).value + this.interpret(x[1]).value
     };
   },
 
   '-'(x) {
     return {
       type: 'number',
-      value: x[0].value - x[1].value
+      value: this.interpret(x[0]).value - this.interpret(x[1]).value
     };
   },
 
   '*'(x) {
     return {
       type: 'number',
-      value: x[0].value * x[1].value
+      value: this.interpret(x[0]).value * this.interpret(x[1]).value
     };
   },
 
   '/'(x) {
     return {
       type: 'number',
-      value: x[0].value / x[1].value
+      value: this.interpret(x[0]).value / this.interpret(x[1]).value
     };
   },
 
   '='(x) {
     return {
       type: 'boolean',
-      value: x[0].value === x[1].value
+      value: this.interpret(x[0]).value === this.interpret(x[1]).value
     };
   },
 
   '!='(x) {
     return {
       type: 'boolean',
-      value: x[0].value !== x[1].value
+      value: this.interpret(x[0]).value !== this.interpret(x[1]).value
     };
   },
 
   '<'(x) {
     return {
       type: 'boolean',
-      value: x[0].value < x[1].value
+      value: this.interpret(x[0]).value < this.interpret(x[1]).value
     };
   },
 
   '>'(x) {
     return {
       type: 'boolean',
-      value: x[0].value > x[1].value
+      value: this.interpret(x[0]).value > this.interpret(x[1]).value
     };
   },
 
   '<='(x) {
     return {
       type: 'boolean',
-      value: x[0].value <= x[1].value
+      value: this.interpret(x[0]).value <= this.interpret(x[1]).value
     };
   },
 
   '>='(x) {
     return {
       type: 'boolean',
-      value: x[0].value >= x[1].value
+      value: this.interpret(x[0]).value >= this.interpret(x[1]).value
     };
   },
 
   'and'(x) {
     return {
       type: 'boolean',
-      value: x[0].value && x[1].value
+      value: this.interpret(x[0]).value && this.interpret(x[1]).value
     };
   },
 
   'or'(x) {
     return {
       type: 'boolean',
-      value: x[0].value || x[1].value
+      value: this.interpret(x[0]).value || this.interpret(x[1]).value
     };
   },
 
   'not'(x) {
     return {
       type: 'boolean',
-      value: !x[0].value
+      value: !this.interpret(x[0]).value
     };
   },
 
@@ -196,7 +195,7 @@ const simpleLisp = {
     } else if (input.type === "identifier") {
       return this[input.value];
     } else if (input.type === "number" || input.type === "string" || input.type === "boolean") {
-      return input.value;
+      return input;
     }
   },
 
@@ -305,8 +304,6 @@ const simpleLisp = {
     }
   }
 };
-
-console.log(JSON.stringify(simpleLisp.parse('(defun sum(lst)(cond ((nil lst) 0)(true (+ (car lst)(sum (cdr lst))))))')))
 
 module.exports = {
   simpleLisp
