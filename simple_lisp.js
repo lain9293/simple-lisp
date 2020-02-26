@@ -270,7 +270,8 @@ const simpleLisp = {
       });
   },
 
-  sentenceSplit(input) {
+  sentenceSplit(_input) {
+    let input = _input.replace(/;.*\n/g, '')
     let count = 0;
     let flag = false;
     let res = [];

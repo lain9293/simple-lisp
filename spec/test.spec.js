@@ -323,6 +323,23 @@ describe('simpleLisp', function () {
       });
     });
 
+    describe('comments', function () {
+      it('should return sum equal zero', function () {
+        expect(t.execute(`; (defun sum(x y)(* x y)) 
+                          (defun sum(x y)(+ x y))
+                          (sum 3 3)`)).toEqual(6);
+      });
+
+      it('should return sum equal one', function () {
+        expect(t.execute('(defun sum(lst)(cond ((nil lst)0)(t (+(car lst)(sum(cdr lst))))))(sum (1))')).toEqual(1);
+      });
+
+      it('should return sum equal six', function () {
+        expect(t.execute('(defun sum(lst)(cond ((nil lst)0)(t (+(car lst)(sum(cdr lst))))))(sum (1 2 3))')).toEqual(6);
+      });
+
+    });
+
     describe('e2e', function () {
       it('should return sum equal zero', function () {
         expect(t.execute('(defun sum(lst)(cond ((nil lst)0)(t (+(car lst)(sum(cdr lst))))))(sum ())')).toEqual(0);
