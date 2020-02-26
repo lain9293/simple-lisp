@@ -271,7 +271,7 @@ const simpleLisp = {
   },
 
   sentenceSplit(_input) {
-    let input = _input.replace(/;.*\n/g, '')
+    let input = _input.replace(/;.*\s/g, '');
     let count = 0;
     let flag = false;
     let res = [];
