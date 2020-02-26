@@ -47,6 +47,12 @@ const simpleLisp = {
   },
 
   '-'(x) {
+    if (x.length === 1) {
+      return {
+        type: 'number',
+        value: -this.interpret(x[0]).value
+      };
+    }
     return {
       type: 'number',
       value: this.interpret(x[0]).value - this.interpret(x[1]).value

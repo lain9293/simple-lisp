@@ -219,6 +219,14 @@ describe('simpleLisp', function () {
         expect(t.execute('(- 4 2)')).toEqual(2);
       });
 
+      it('should return difference atom', function () {
+        expect(t.execute('(- 4)')).toEqual(-4);
+      });
+
+      it('should return difference atom', function () {
+        expect(t.execute('(- -5)')).toEqual(5);
+      });
+
       it('should return sum', function () {
         expect(t.execute('(+ (* 3 5) (- 10 6))')).toEqual(19);
       });
@@ -304,6 +312,10 @@ describe('simpleLisp', function () {
 
       it('should return res of multi init new var', function () {
         expect(t.execute('(defun size(x) 3)(* 5 (size))')).toEqual(15);
+      });
+
+      it('should return res of multi init new var', function () {
+        expect(t.execute('(defun pi() 3.14159)(defun radius() 10)(* (pi) (* (radius) (radius)))')).toEqual(314.159);
       });
 
       it('should return res of new function', function () {
