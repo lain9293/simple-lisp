@@ -194,7 +194,7 @@ describe('simpleLisp', function () {
       });
 
       it('should return concat of lists', function () {
-        expect(t.execute('(cond (true "test")((< 3 5) "test1"))')).toEqual("test");
+        expect(t.execute('(cond (t "test")((< 3 5) "test1"))')).toEqual("test");
       });
 
       it('should return concat of lists', function () {
@@ -272,19 +272,19 @@ describe('simpleLisp', function () {
       });
 
       it('should return false', function () {
-        expect(t.execute('(and true false)')).toEqual(false);
+        expect(t.execute('(and t f)')).toEqual(false);
       });
 
       it('should return false', function () {
-        expect(t.execute('(or true false)')).toEqual(true);
+        expect(t.execute('(or t f)')).toEqual(true);
       });
 
       it('should return false', function () {
-        expect(t.execute('(not true)')).toEqual(false);
+        expect(t.execute('(not t)')).toEqual(false);
       });
 
       it('should return false', function () {
-        expect(t.execute('(not false)')).toEqual(true);
+        expect(t.execute('(not f)')).toEqual(true);
       });
 
       it('should return true', function () {
@@ -325,15 +325,15 @@ describe('simpleLisp', function () {
 
     describe('e2e', function () {
       it('should return sum equal zero', function () {
-        expect(t.execute('(defun sum(lst)(cond ((nil lst)0)(true (+(car lst)(sum(cdr lst))))))(sum ())')).toEqual(0);
+        expect(t.execute('(defun sum(lst)(cond ((nil lst)0)(t (+(car lst)(sum(cdr lst))))))(sum ())')).toEqual(0);
       });
 
       it('should return sum equal one', function () {
-        expect(t.execute('(defun sum(lst)(cond ((nil lst)0)(true (+(car lst)(sum(cdr lst))))))(sum (1))')).toEqual(1);
+        expect(t.execute('(defun sum(lst)(cond ((nil lst)0)(t (+(car lst)(sum(cdr lst))))))(sum (1))')).toEqual(1);
       });
 
       it('should return sum equal six', function () {
-        expect(t.execute('(defun sum(lst)(cond ((nil lst)0)(true (+(car lst)(sum(cdr lst))))))(sum (1 2 3))')).toEqual(6);
+        expect(t.execute('(defun sum(lst)(cond ((nil lst)0)(t (+(car lst)(sum(cdr lst))))))(sum (1 2 3))')).toEqual(6);
       });
 
     });

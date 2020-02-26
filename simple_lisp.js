@@ -211,10 +211,10 @@ const simpleLisp = {
   },
 
   categorize(input) {
-    if (input === "true" || input === "false") {
+    if (input === "t" || input === "f") {
       return {
         type: 'boolean',
-        value: (input == 'true')
+        value: (input == 't')
       };
     } else if (!isNaN(parseFloat(input))) {
       return {
