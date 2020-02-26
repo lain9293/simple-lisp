@@ -302,6 +302,10 @@ describe('simpleLisp', function () {
         expect(t.execute('(defun name(x y) (+ x y))(name 2 3)')).toEqual(5);
       });
 
+      it('should return res of multi init new var', function () {
+        expect(t.execute('(defun size(x) 3)(* 5 (size))')).toEqual(15);
+      });
+
       it('should return res of new function', function () {
         expect(t.execute('(defun name(x y) (cons (car x) (cdr y)))(name (1 2 3) (4 5 6))')).toEqual([1, 5, 6]);
       });

@@ -140,18 +140,22 @@ const simpleLisp = {
   },
 
   replaceAll(func, params, inputs) {
-    return func.map(f => {
-      if (Array.isArray(f)) {
-        return this.replaceAll(f, params, inputs);
-      } else {
-        params.forEach((p, index) => {
-          if (f.type === 'identifier' && f.value === p.value) {
-            f = inputs[0][index];
-          }
-        })
-        return f;
-      }
-    })
+    if (Array.isArray(func)) {
+      return func.map(f => {
+        if (Array.isArray(f)) {
+          return this.replaceAll(f, params, inputs);
+        } else {
+          params.forEach((p, index) => {
+            if (f.type === 'identifier' && f.value === p.value) {
+              f = inputs[0][index];
+            }
+          })
+          return f;
+        }
+      })
+    } else {
+      return func;
+    }
   },
 
   addToLibrary(name, params, func) {
