@@ -330,14 +330,6 @@ describe('simpleLisp', function () {
                           (sum 3 3)`)).toEqual(6);
       });
 
-      it('should return sum equal one', function () {
-        expect(t.execute('(defun sum(lst)(cond ((nil lst)0)(t (+(car lst)(sum(cdr lst))))))(sum (1))')).toEqual(1);
-      });
-
-      it('should return sum equal six', function () {
-        expect(t.execute('(defun sum(lst)(cond ((nil lst)0)(t (+(car lst)(sum(cdr lst))))))(sum (1 2 3))')).toEqual(6);
-      });
-
     });
 
     describe('e2e', function () {
