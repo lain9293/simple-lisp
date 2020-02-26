@@ -41,7 +41,8 @@ const simpleLisp = {
   '+'(x) {
     return {
       type: 'number',
-      value: this.interpret(x[0]).value + this.interpret(x[1]).value
+      value: x.reduce((acc, val) =>
+        acc + this.interpret(val).value, 0),
     };
   },
 
@@ -55,7 +56,8 @@ const simpleLisp = {
   '*'(x) {
     return {
       type: 'number',
-      value: this.interpret(x[0]).value * this.interpret(x[1]).value
+      value: x.reduce((acc, val) =>
+        acc * this.interpret(val).value, 1),
     };
   },
 
@@ -154,7 +156,6 @@ const simpleLisp = {
 
   addToLibrary(name, params, func) {
     return this[name.value] = (...inputs) => {
-      const _params = params;
       let _func = func;
       _func = this.replaceAll(_func, params, inputs);
       return this.interpret(_func);

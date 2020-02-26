@@ -207,8 +207,24 @@ describe('simpleLisp', function () {
         expect(t.execute('(+ 2 2)')).toEqual(4);
       });
 
+      it('should return sum atom', function () {
+        expect(t.execute('(+ 21 35 12 7)')).toEqual(75);
+      });
+
+      it('should return multi atom', function () {
+        expect(t.execute('(* 25 4 12)')).toEqual(1200);
+      });
+
       it('should return difference atom', function () {
         expect(t.execute('(- 4 2)')).toEqual(2);
+      });
+
+      it('should return sum', function () {
+        expect(t.execute('(+ (* 3 5) (- 10 6))')).toEqual(19);
+      });
+
+      it('should return sum', function () {
+        expect(t.execute('(+ (* 3 (+ (* 2 4) (+ 3 5))) (+ (- 10 7) 6))')).toEqual(57);
       });
 
       it('should return difference atom', function () {
