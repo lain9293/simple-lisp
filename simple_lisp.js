@@ -1,4 +1,5 @@
 const simpleLisp = {
+  //Library start
   car(x) {
     return x[0][0] ? x[0][0] : [];
   },
@@ -11,8 +12,8 @@ const simpleLisp = {
     if (Array.isArray(x[0])) {
       return x.reduce((acc, val) => [...acc, ...val]);
     } else {
-      let tail = x.slice(1)
-      const newTail = tail.reduce((acc, val) => [...acc, ...val])
+      let tail = x.slice(1);
+      const newTail = tail.reduce((acc, val) => [...acc, ...val]);
       newTail.unshift(x[0]);
       return newTail;
     }
@@ -30,19 +31,11 @@ const simpleLisp = {
     return res;
   },
 
-  print(x) {
-    if (Array.isArray(x)) {
-      return x[0];
-    }
-    return x;
-  },
-
   //Math
   '+'(x) {
     return {
       type: 'number',
-      value: x.reduce((acc, val) =>
-        acc + this.interpret(val).value, 0),
+      value: x.reduce((acc, val) => acc + this.interpret(val).value, 0)
     };
   },
 
@@ -62,8 +55,7 @@ const simpleLisp = {
   '*'(x) {
     return {
       type: 'number',
-      value: x.reduce((acc, val) =>
-        acc * this.interpret(val).value, 1),
+      value: x.reduce((acc, val) => acc * this.interpret(val).value, 1)
     };
   },
 
@@ -116,34 +108,35 @@ const simpleLisp = {
     };
   },
 
-  'and'(x) {
+  and(x) {
     return {
       type: 'boolean',
       value: this.interpret(x[0]).value && this.interpret(x[1]).value
     };
   },
 
-  'or'(x) {
+  or(x) {
     return {
       type: 'boolean',
       value: this.interpret(x[0]).value || this.interpret(x[1]).value
     };
   },
 
-  'not'(x) {
+  not(x) {
     return {
       type: 'boolean',
       value: !this.interpret(x[0]).value
     };
   },
 
-  'nil'(x) {
+  nil(x) {
     if (Array.isArray(x[0])) {
       return x[0].length <= 0;
     } else {
       return !x[0];
     }
   },
+  //Library end
 
   replaceAll(func, params, inputs) {
     if (Array.isArray(func)) {
@@ -155,32 +148,36 @@ const simpleLisp = {
             if (f.type === 'identifier' && f.value === p.value) {
               f = inputs[0][index];
             }
-          })
+          });
           return f;
         }
-      })
+      });
     } else {
       return func;
     }
   },
 
   addToLibrary(name, params, func) {
-    return this[name.value] = (...inputs) => {
+    return (this[name.value] = (...inputs) => {
       let _func = func;
       _func = this.replaceAll(_func, params, inputs);
       return this.interpret(_func);
-    }
+    });
   },
 
   resolve(inputs) {
     if (inputs.length > 0 && inputs[0].type === 'identifier') {
       const res = inputs.slice(1).map(t => {
-        if (Array.isArray(t) && t.length > 0 && t[0].type === 'identifier') {
-          return this.resolve(t)
+        if (
+          Array.isArray(t) &&
+          t.length > 0 &&
+          t[0].type === 'identifier'
+        ) {
+          return this.resolve(t);
         } else {
           return t;
         }
-      })
+      });
       if (inputs.length > 0 && inputs[0].value in this) {
         return this[inputs[0].value](res);
       } else {
@@ -203,18 +200,22 @@ const simpleLisp = {
   interpret(input) {
     if (input instanceof Array) {
       return this.interpretList(input);
-    } else if (input.type === "identifier") {
+    } else if (input.type === 'identifier') {
       return this[input.value];
-    } else if (input.type === "number" || input.type === "string" || input.type === "boolean") {
+    } else if (
+      input.type === 'number' ||
+      input.type === 'string' ||
+      input.type === 'boolean'
+    ) {
       return input;
     }
   },
 
   categorize(input) {
-    if (input === "t" || input === "f") {
+    if (input === 't' || input === 'f') {
       return {
         type: 'boolean',
-        value: (input == 't')
+        value: input == 't'
       };
     } else if (!isNaN(parseFloat(input))) {
       return {
@@ -241,32 +242,35 @@ const simpleLisp = {
       const token = input.shift();
       if (token === undefined) {
         return list.pop();
-      } else if (token === "(") {
+      } else if (token === '(') {
         list.push(this.parenthesize(input, []));
         return this.parenthesize(input, list);
-      } else if (token === ")") {
+      } else if (token === ')') {
         return list;
       } else {
-        return this.parenthesize(input, list.concat(this.categorize(token)));
+        return this.parenthesize(
+          input,
+          list.concat(this.categorize(token))
+        );
       }
     }
   },
 
   tokenize(input) {
-    return input.split('"')
+    return input
+      .split('"')
       .map((x, i) => {
         if (i % 2 === 0) {
-          return x.replace(/\(/g, ' ( ')
-            .replace(/\)/g, ' ) ');
+          return x.replace(/\(/g, ' ( ').replace(/\)/g, ' ) ');
         } else {
-          return x.replace(/ /g, "!whitespace!");
+          return x.replace(/ /g, '!whitespace!');
         }
       })
       .join('"')
       .trim()
       .split(/\s+/)
-      .map((x) => {
-        return x.replace(/!whitespace!/g, " ");
+      .map(x => {
+        return x.replace(/!whitespace!/g, ' ');
       });
   },
 
@@ -298,19 +302,19 @@ const simpleLisp = {
     let res = [];
     if (input.match(/[^"]?\(.*\)[^"]/gm)) {
       this.sentenceSplit(input).forEach(sentence => {
-        const temp = this.interpret(this.parse(sentence))
+        const temp = this.interpret(this.parse(sentence));
         if (temp !== undefined) {
           res.push(temp);
         }
-      })
+      });
     } else {
-      res = this.interpret(this.parse(input))
+      res = this.interpret(this.parse(input));
     }
     if (res.length === 1) {
       res = res[0];
     }
     if (res instanceof Array) {
-      return res.map(x => x.value ? x.value : x);
+      return res.map(x => x.hasOwnProperty('value') ? x.value : x);
     } else {
       return res.hasOwnProperty('value') ? res.value : res;
     }

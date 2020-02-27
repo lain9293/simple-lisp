@@ -114,13 +114,6 @@ describe('simpleLisp', function () {
         expect(t.execute("(print 1)")).toEqual(1);
       });
 
-      it('should run print on an int', function () {
-        expect(t.execute("(print 2 3)")).toEqual(2);
-      });
-      it('should run print on an int', function () {
-        expect(t.execute("(print (2 3))")).toEqual([2, 3]);
-      });
-
       it('should return first element of list', function () {
         expect(t.execute("(car (1 2 3))")).toEqual(1);
       });
