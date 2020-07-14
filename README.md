@@ -10,8 +10,8 @@ Define a procedure that takes three numbers as arguments and returns the sum squ
 (main 1 2 3)
 ```
 
-; sqrt
 ```lisp
+; sqrt
 (defun average(x y) (/ (+ x y) 2))
 
 (defun square(x)  (* x x))
