@@ -288,24 +288,28 @@ const simpleLisp = {
     },
 
     execute(input) {
-        let res = [];
-        if (input.match(/[^"]?\(.*\)[^"]/gm)) {
-            this.sentenceSplit(input).forEach((sentence) => {
-                const temp = this.interpret(this.parse(sentence));
-                if (temp !== undefined) {
-                    res.push(temp);
-                }
-            });
+        if (input) {
+            let res = [];
+            if (input.match(/[^"]?\(.*\)[^"]/gm)) {
+                this.sentenceSplit(input).forEach((sentence) => {
+                    const temp = this.interpret(this.parse(sentence));
+                    if (temp !== undefined) {
+                        res.push(temp);
+                    }
+                });
+            } else {
+                res = this.interpret(this.parse(input));
+            }
+            if (res.length === 1) {
+                res = res[0];
+            }
+            if (res instanceof Array) {
+                return res.map((x) => (x.hasOwnProperty('value') ? x.value : x));
+            } else {
+                return res.hasOwnProperty('value') ? res.value : res;
+            }
         } else {
-            res = this.interpret(this.parse(input));
-        }
-        if (res.length === 1) {
-            res = res[0];
-        }
-        if (res instanceof Array) {
-            return res.map((x) => (x.hasOwnProperty('value') ? x.value : x));
-        } else {
-            return res.hasOwnProperty('value') ? res.value : res;
+            return '';
         }
     },
 };

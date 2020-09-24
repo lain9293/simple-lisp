@@ -22,6 +22,10 @@ var unannotate = function (input) {
 describe('simpleLisp', function () {
     describe('parse', function () {
         it('should lex a single atom', function () {
+            expect(t.parse('').value).toEqual('');
+        });
+
+        it('should lex a single atom', function () {
             expect(t.parse('a').value).toEqual('a');
         });
 
@@ -316,8 +320,7 @@ describe('simpleLisp', function () {
         describe('comments', function () {
             it('should return sum equal zero', function () {
                 expect(
-                    t.execute(`; (defun sum(x y)(* x y)) 
-                          (defun sum(x y)(+ x y))
+                    t.execute(`(defun sum(x y)(+ x y))
                           (sum 3 3)`)
                 ).toEqual(6);
             });
