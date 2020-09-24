@@ -1,6 +1,6 @@
 {
     "name": "@lain9293/simple-lisp",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "description": "A simple lisp machine for educational purposes.",
     "main": "index.js",
     "scripts": {
