@@ -1,5 +1,5 @@
 {
-    "name": "simple-lisp",
+    "name": "@lain9293/simple-lisp",
     "version": "1.0.0",
     "description": "A simple lisp machine for educational purposes.",
     "main": "index.js",
