@@ -1,4 +1,5 @@
-# simple_lisp
+# simple-lisp
+
 A simple lisp machine for educational purposes.
 
 Define a procedure that takes three numbers as arguments and returns the sum squares of two large ones.
@@ -22,7 +23,7 @@ Define a procedure that takes three numbers as arguments and returns the sum squ
 
 (defun good-enough?(guess x) (< (abs (- (square guess) x)) 0.001))
 
-(defun sqrt-iter(guess x) (cond 
+(defun sqrt-iter(guess x) (cond
                             ((good-enough? guess x) guess)
                             (t (sqrt-iter (improve guess x) x))
                           )
@@ -34,7 +35,7 @@ Define a procedure that takes three numbers as arguments and returns the sum squ
 
 ```lisp
 ;if
-(defun if(predicate then else)  (cond 
+(defun if(predicate then else)  (cond
                                     (predicate then)
                                     (t else)
                                 )
@@ -44,7 +45,7 @@ Define a procedure that takes three numbers as arguments and returns the sum squ
 ```
 
 ```lisp
-(defun factorial(n) (cond 
+(defun factorial(n) (cond
                         ((= n 1) 1)
                         (t (* n (factorial (- n 1))))
                     )
@@ -52,7 +53,7 @@ Define a procedure that takes three numbers as arguments and returns the sum squ
 (factorial 5)
 
 (defun factorial(n) (fact-iter 1 1 n))
-(defun fact-iter(product counter max-count) (cond 
+(defun fact-iter(product counter max-count) (cond
                                                 ((> counter max-count) product)
                                                 (t (fact-iter (* counter product) (+ counter 1) max-count)))
 )
@@ -60,8 +61,9 @@ Define a procedure that takes three numbers as arguments and returns the sum squ
 ```
 
 how many ways can I exchange an amount of 1 dollar if there are coins of 50, 25, 10, 5 and 1 cent?
+
 ```lisp
-(defun first-denomination(kinds-of-coins) (cond 
+(defun first-denomination(kinds-of-coins) (cond
                                                 ((= kinds-of-coins 1) 1)
                                                 ((= kinds-of-coins 2) 5)
                                                 ((= kinds-of-coins 3) 10)
@@ -71,7 +73,7 @@ how many ways can I exchange an amount of 1 dollar if there are coins of 50, 25,
 
 (defun cc(amount kinds-of-coins) (cond ((= amount 0) 1)
                                        ((or (< amount 0) (= kinds-of-coins 0)) 0)
-                                       (t (+ 
+                                       (t (+
                                             (cc amount (- kinds-of-coins 1))
                                             (cc (- amount
                                                    (first-denomination kinds-of-coins)) kinds-of-coins)))
@@ -83,14 +85,14 @@ how many ways can I exchange an amount of 1 dollar if there are coins of 50, 25,
 ```
 
 ```lisp
-(defun expt(b n) (cond 
+(defun expt(b n) (cond
                         ((= n 0) 1)
                         (t(* b (expt b (- n 1))))
                  )
 )
 (expt 2 3)
 
-(defun expt-iter(b counter product) (cond 
+(defun expt-iter(b counter product) (cond
                                         ((= counter 0) product)
                                         (t (expt-iter b (- counter 1) (* b product)))
                                      )
@@ -102,7 +104,7 @@ how many ways can I exchange an amount of 1 dollar if there are coins of 50, 25,
 ```
 
 ```lisp
-(defun sum(term a next b) (cond 
+(defun sum(term a next b) (cond
                             ((> a b) 0)
                             (t (+ (term a)
                                   (sum term (next a) next b)))
