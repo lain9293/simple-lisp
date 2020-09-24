@@ -1,14 +1,15 @@
 {
-  "name": "simple_lisp",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "./node_modules/.bin/jasmine-node spec"
-  },
-  "author": "",
-  "license": "ISC",
-  "dependencies": {
-    "jasmine-node": "^3.0.0"
-  }
+    "name": "simple-lisp",
+    "version": "1.0.0",
+    "description": "A simple lisp machine for educational purposes.",
+    "main": "index.js",
+    "scripts": {
+        "test": "./node_modules/.bin/jasmine-node spec"
+    },
+    "author": "lain9293",
+    "license": "ISC",
+    "dependencies": {},
+    "devDependencies": {
+        "jasmine-node": "^3.0.0"
+    }
 }
